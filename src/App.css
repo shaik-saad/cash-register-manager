@@ -6,7 +6,6 @@
 }
 
 .App-header {
-  /* min-height: 100vh; */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -15,8 +14,25 @@
   color: var(--primary-color);
 }
 
+.App-header h1{
+  margin: 1rem 0;
+}
+
 .inner-container{
-  height: 36vh;
+  height: 60vh;
+}
+
+#message-div{
+  max-width: 275px;
+  min-height: 8vh;
+  margin: auto;
+}
+
+#message{
+  padding: 1rem;
+  background-color: rgba(255, 0, 0, 0.3);
+  border: 1px solid rgb(255, 0, 0);
+  border-radius: 0.5rem;
 }
 
 label{
@@ -64,9 +80,7 @@ th, td{
 }
 
 footer{
-  position: sticky;
-  bottom: 0;
-  margin-top: 4rem;
+  margin-top: 3.6rem;
 }
 
 footer p{
