@@ -1,7 +1,75 @@
+import { useState } from 'react';
 import './App.css';
 
 const notesAvailable = [2000, 500, 100, 20, 10, 5, 1]
+
 function App() {
+  const [values, setValues ] = useState({
+    billAmount: "",
+    cashAmountGiven: "",
+    noOfNotes: [],
+  })
+  const [showCashInput, setShowCashInput] = useState(false)
+  const [showReturnChangeTable, setShowReturnChangeTable] = useState(false)
+  const [successMessage, setSuccessMessage] = useState("")
+  const [errorMessage, setErrorMessage] = useState("")
+  
+  const {billAmount, cashAmountGiven, noOfNotes} = values;
+
+  function showErrorMessage(errMessage){
+    setErrorMessage(<p id="message">{errMessage}</p>)
+  }
+
+  function amountInputValidation(inputValue){
+    if(inputValue === "")
+      return showErrorMessage("Please enter the bill amount.") 
+    if(inputValue%1 !== 0)
+        return showErrorMessage("Please input numbers.")
+    if(inputValue <= 0)
+      return showErrorMessage("Invalid amount. Please enter a valid amount.")
+    return true
+  }
+
+  function billAmountchangeHandler(event){
+    setValues({...values, billAmount: event.target.value})
+  }
+
+  function nextButtonClickHandler(){
+    if(amountInputValidation(billAmount)){
+      setShowCashInput(true)
+      setErrorMessage("")
+    }
+  }
+
+  function cashAmountGivenchangeHandler(event){
+    setValues({...values, cashAmountGiven: event.target.value})
+  }
+
+  function checkClickHandler(){
+    if(amountInputValidation(cashAmountGiven)){
+      if(Number(cashAmountGiven)  > Number(billAmount)){
+        var amountToBeReturned = cashAmountGiven - billAmount
+        var notesArray = []
+        for( var i = 0; i <notesAvailable.length; i++){
+          const notesTobeGiven = Math.trunc(amountToBeReturned / notesAvailable[i])
+          amountToBeReturned %= notesAvailable[i]
+          notesArray.push(notesTobeGiven)
+        }
+        setValues({...values, noOfNotes: notesArray})
+        setErrorMessage("")
+        setSuccessMessage(<p 
+                            id="message" 
+                            style={{"backgroundColor": "rgba(0, 255, 0, 0.5)", "border": "1px solid green"}}
+                          >
+                            Check the Return Change Drawer.
+                          </p>)
+        setShowReturnChangeTable(true)
+      } else{
+        showErrorMessage("do you want to wash dishes?")
+      }    
+    }
+  }
+
   return (
     <div className="App">
       <header className="App-header">
@@ -11,30 +79,51 @@ function App() {
           Enter the bill amount and cash given by the customer and know minimum number of notes to return.
         </p>
         <div className="inner-container">
+          <div id="message-div">{successMessage}{errorMessage}</div>
           <label htmlFor="bill-input">Bill Amount:</label>
-          <input id="bill-input" type="number"/>
-          <button id="next-btn">Next</button>
-          <label htmlFor="cash-given-input">Cash Given:</label>
-          <input id="cash-given-input" type="number"/>
-          <button id="check-btn">Check</button>
+          <input 
+            id="bill-input" 
+            type="text" 
+            onChange={billAmountchangeHandler}
+          />
+          { showCashInput ? 
+            <>
+              <label htmlFor="cash-given-input">Cash Given:</label>
+              <input 
+                id="cash-given-input" 
+                type="text" 
+                onChange={cashAmountGivenchangeHandler}
+              />
+              <button 
+                id="check-btn"
+                onClick={() => checkClickHandler()}>
+                  Check
+              </button>
+            </>
+            : <button id="next-btn" onClick={() => nextButtonClickHandler()}>Next</button>}
+          <table id="notes-display-table" style={{"display": showReturnChangeTable ? "" : "none"}}>
+            <caption>Return Change</caption>
+            <tbody>
+            <tr>
+              <th>No of Notes</th>
+              {notesAvailable.map((notes, index) => {
+                return <td 
+                        key={index} className="no-of-notes-td"
+                        style={{"backgroundColor": (noOfNotes[index] > 0) ? "rgba(0, 255, 0, 0.5)" : ""}}
+                      >
+                        {noOfNotes[index]}
+                      </td>
+              })}
+            </tr>
+            <tr>
+              <th>Note</th>
+              {notesAvailable.map(note => {
+                return <td key={note} className="notes-td">{note}</td>
+              })}
+            </tr>
+            </tbody>
+          </table>
         </div>
-        <table id="notes-display-table" style={{"border": "1px solid white"}}>
-          <caption>Return Change</caption>
-          <tbody>
-          <tr>
-            <th>No of Notes</th>
-            {notesAvailable.map(note => {
-              return <td key={note} className="no-of-notes-td"></td>
-            })}
-          </tr>
-          <tr>
-            <th>Note</th>
-            {notesAvailable.map(note => {
-              return <td key={note} className="notes-td">{note}</td>
-            })}
-          </tr>
-          </tbody>
-        </table>
         <footer>
           <p>If you loved❤️ this app, make sure to follow me on</p>
           <ul id="non-bullet-list">
