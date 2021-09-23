@@ -20,6 +20,15 @@ function App() {
     setErrorMessage(<p id="message">{errMessage}</p>)
   }
 
+  function showSuccessMessage(message){
+    setSuccessMessage(<p 
+                        id="message" 
+                        style={{"backgroundColor": "rgba(0, 255, 0, 0.5)", "border": "1px solid green"}}
+                      >
+                        {message}
+                      </p>)
+  }
+
   function amountInputValidation(inputValue){
     if(inputValue === "")
       return showErrorMessage("Please enter the bill amount.") 
@@ -30,6 +39,7 @@ function App() {
     return true
   }
 
+  // input
   function billAmountchangeHandler(event){
     setValues({...values, billAmount: event.target.value})
   }
@@ -45,8 +55,19 @@ function App() {
     setValues({...values, cashAmountGiven: event.target.value})
   }
 
+  // processing
   function checkClickHandler(){
     if(amountInputValidation(cashAmountGiven)){
+      setErrorMessage("")
+      setSuccessMessage("")
+      setShowReturnChangeTable(false)
+
+      // if the cash amount is equal to bill
+      if(Number(cashAmountGiven)  === Number(billAmount)){
+        return showSuccessMessage("Customer has given you the Exact amount. No Change has to be given.")
+      }
+
+
       if(Number(cashAmountGiven)  > Number(billAmount)){
         var amountToBeReturned = cashAmountGiven - billAmount
         var notesArray = []
@@ -56,16 +77,12 @@ function App() {
           notesArray.push(notesTobeGiven)
         }
         setValues({...values, noOfNotes: notesArray})
-        setErrorMessage("")
-        setSuccessMessage(<p 
-                            id="message" 
-                            style={{"backgroundColor": "rgba(0, 255, 0, 0.5)", "border": "1px solid green"}}
-                          >
-                            Check the Return Change Drawer.
-                          </p>)
+
+        // output
+        showSuccessMessage("Check the Return Change Drawer.")
         setShowReturnChangeTable(true)
       } else{
-        showErrorMessage("do you want to wash dishes?")
+        showErrorMessage("do you want to wash the dishes?")
       }    
     }
   }
