@@ -57,10 +57,10 @@ function App() {
 
   // processing
   function checkClickHandler(){
-    if(amountInputValidation(cashAmountGiven)){
-      setErrorMessage("")
-      setSuccessMessage("")
-      setShowReturnChangeTable(false)
+    setErrorMessage("")
+    setSuccessMessage("")
+    setShowReturnChangeTable(false)
+    if(amountInputValidation(billAmount) && amountInputValidation(cashAmountGiven)){
 
       // if the cash amount is equal to bill
       if(Number(cashAmountGiven)  === Number(billAmount)){
