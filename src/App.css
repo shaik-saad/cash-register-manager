@@ -103,3 +103,7 @@ footer p{
   text-decoration: none;
   font-size: 1.5rem;
 }
+
+#copy-right a{
+  color: white;
+}

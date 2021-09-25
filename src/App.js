@@ -159,6 +159,8 @@ function App() {
                 </a>
             </li>
           </ul>
+          <br/>
+          <small id="copy-right">© | 2021 | <a href="https://shaiksaadullah.netlify.app/">saad.codes</a></small>
         </footer>
     </div>
   );
